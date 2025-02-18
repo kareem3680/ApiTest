@@ -3,6 +3,9 @@ const userModel = require("../models/userModel");
 
 // CRUD operations
 exports.createUser = async (req, res, next) => {
+  if (req.body.role) {
+    delete req.body.role;
+  }
   const newUser = await userModel.create(req.body);
   res.status(201).json({ data: newUser });
 };
@@ -19,6 +22,9 @@ exports.getSpecificUser = async (req, res, next) => {
 };
 
 exports.updateUser = async (req, res, next) => {
+  if (req.body.role) {
+    delete req.body.role;
+  }
   const user = await userModel.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
   });
