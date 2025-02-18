@@ -4,11 +4,13 @@ const express = require("express");
 // Import files
 const dotenv = require("dotenv");
 const userRoute = require("./routes/userRoute");
+const dbConnection = require("./config/dataBase");
 
 // usage
 const app = express();
 app.use(express.json());
 dotenv.config({ path: "config.env" });
+dbConnection();
 
 // Routes
 app.use("/users", userRoute);
