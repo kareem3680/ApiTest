@@ -1,8 +1,9 @@
 // Import required libraries
 const express = require("express");
+const dotenv = require("dotenv");
+const rateLimit = require("express-rate-limit");
 
 // Import files
-const dotenv = require("dotenv");
 const dbConnection = require("./config/dataBase");
 const globalError = require("./middleWares/errorMiddleware");
 const ApiError = require("./utils/apiError");
@@ -11,9 +12,21 @@ const authRoute = require("./routes/authRoute");
 
 // usage
 const app = express();
-app.use(express.json());
+app.use(express.json({ limit: "50 kb" }));
 dotenv.config({ path: "config.env" });
+
+// Connect to MongoDB Database
 dbConnection();
+
+// Rate Limit
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 50,
+  message: "Too many requests from this IP, please try again after 15 minutes.",
+});
+
+// Apply Rate Limit
+app.use("/", limiter);
 
 // Routes
 app.use("/users", userRoute);
